@@ -30,12 +30,12 @@ pipeline {
              }
         }
 
-            // stage('Maven Compile') 
-            // {
-            //     steps {
-            //         sh 'mvn compile'
-            //     }
-            // }
+            stage('Maven Compile') 
+             {
+                 steps {
+                     sh 'mvn compile'
+                 }
+             }
         // stage('Maven Test') 
         // {
         //     steps {
