@@ -4,7 +4,7 @@ pipeline {
 
     tools {
 
-        maven 'maven'
+        maven 'Maven3'
 
     }
 
@@ -19,7 +19,7 @@ pipeline {
         stage('Check Out from Git') 
         {
             steps {
-                git branch: 'prod' , url: 'https://github.com/bkrrajmali/azure-evening-springbootjavapp.git'
+                git branch: 'prod' , url: 'https://github.com/sharathimp22-sys/azure-evening-springbootjavapp.git'
             }
         }
 
