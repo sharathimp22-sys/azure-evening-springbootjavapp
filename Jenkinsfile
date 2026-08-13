@@ -52,7 +52,8 @@ pipeline {
         {
             steps {
                 echo "Trivy Scan Started"
-                sh 'trivy fs --format table --output trivy-report.txt --severity HIGH,CRITICAL .'
+                sh 'trivy fs --scanners vuln --format table --output trivy-report.txt --severity HIGH,CRITICAL .'
+                archiveArtifacts artifacts: 'trivy-report.txt', fingerprint: true
                 echo "Trivy Scan Finished"
             }
         }
