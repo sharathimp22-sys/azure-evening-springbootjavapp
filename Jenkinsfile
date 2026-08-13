@@ -23,12 +23,12 @@ pipeline {
             }
         }
 
-        // stage('Maven Validate') 
-        // {
-        //     steps {
-        //         sh 'mvn validate'
-        //     }
-        // }
+        stage('Maven Validate') 
+        {
+             steps {
+                 sh 'mvn validate'
+             }
+        }
 
             // stage('Maven Compile') 
             // {
