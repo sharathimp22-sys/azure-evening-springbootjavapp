@@ -12,6 +12,7 @@ pipeline {
         TENANT_ID="ec78375d-0db0-42cf-82a6-2e6403e95936"
         IMAGE_NAME = "sprinbootapp"
         IMAGE_TAG = "latest"
+        ACR_LOGIN_SERVER = "project4springboot.azurecr.io"
         
     }
 
@@ -85,17 +86,13 @@ pipeline {
             }
         }
       }
-      stage ('Docker Build')
-      {
-        steps {
-            
-            echo "Build Docker Image"
-            sh  'docker build -t "${IMAGE_NAME}:${IMAGE_TAG}" .'
-      
-        }
-      }
-   }
+      stage('Docker Build') {
+    steps {
+        echo "Build Docker Image"
+        sh 'docker build -t "${IMAGE_NAME}:${IMAGE_TAG}" .'
+    }
 }
+
 stage('Trivy Image Scan') {
     steps {
         echo 'Scanning Docker image'
@@ -109,5 +106,40 @@ stage('Trivy Image Scan') {
         '''
 
         archiveArtifacts artifacts: 'trivy-image-report.txt', fingerprint: true
+
+        echo 'Trivy Image Scan Finished'
+    }
+}
+
+stage('Push to ACR') {
+    steps {
+        echo 'Pushing Docker image to Azure Container Registry'
+
+        withCredentials([
+            usernamePassword(
+                credentialsId: 'acr-creds',
+                usernameVariable: 'ACR_USER',
+                passwordVariable: 'ACR_PASS'
+            )
+        ]) {
+            sh '''
+                echo "$ACR_PASS" | docker login "$ACR_LOGIN_SERVER" \
+                    -u "$ACR_USER" \
+                    --password-stdin
+
+                docker tag \
+                    "${IMAGE_NAME}:${IMAGE_TAG}" \
+                    "${ACR_LOGIN_SERVER}/${IMAGE_NAME}:${IMAGE_TAG}"
+
+                docker push \
+                    "${ACR_LOGIN_SERVER}/${IMAGE_NAME}:${IMAGE_TAG}"
+
+                docker logout "$ACR_LOGIN_SERVER"
+            '''
+        }
+
+        echo 'Docker image pushed to ACR successfully'
+    }
+}
     }
 }
