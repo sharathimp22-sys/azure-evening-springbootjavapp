@@ -69,19 +69,7 @@ pipeline {
         echo 'SonarQube Analysis Finished'
     }
 }
-        stage('Create Sonar Webhook') {
-    steps {
-        withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
-            sh '''
-                curl -u "$SONAR_TOKEN:" \
-                -X POST "http://localhost:9000/api/webhooks/create" \
-                -d "name=Jenkins" \
-                -d "url=http://172.17.0.1:8080/sonarqube-webhook/" \
-                -d "project=azure-evening-springbootjavapp"
-            '''
-        }
-    }
-}
+        
         stage('Maven Package') 
         {
             steps {
