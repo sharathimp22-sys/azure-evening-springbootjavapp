@@ -97,20 +97,13 @@ stage('Trivy Image Scan') {
     steps {
         echo 'Scanning Docker image'
 
-        sh '''
-            trivy image \
-            --severity HIGH,CRITICAL \
-            --format table \
-            --output trivy-image-report.txt \
-            "${IMAGE_NAME}:${IMAGE_TAG}"
-        '''
+        sh 'trivy image --severity HIGH,CRITICAL --format table --output trivy-image-report.txt "${IMAGE_NAME}:${IMAGE_TAG}"'
 
         archiveArtifacts artifacts: 'trivy-image-report.txt', fingerprint: true
 
         echo 'Trivy Image Scan Finished'
     }
 }
-
 stage('Push to ACR') {
     steps {
         echo 'Pushing Docker image to Azure Container Registry'
@@ -123,23 +116,13 @@ stage('Push to ACR') {
             )
         ]) {
             sh '''
-                echo "$ACR_PASS" | docker login "$ACR_LOGIN_SERVER" \
-                    -u "$ACR_USER" \
-                    --password-stdin
-
-                docker tag \
-                    "${IMAGE_NAME}:${IMAGE_TAG}" \
-                    "${ACR_LOGIN_SERVER}/${IMAGE_NAME}:${IMAGE_TAG}"
-
-                docker push \
-                    "${ACR_LOGIN_SERVER}/${IMAGE_NAME}:${IMAGE_TAG}"
-
+                echo "$ACR_PASS" | docker login "$ACR_LOGIN_SERVER" -u "$ACR_USER" --password-stdin
+                docker tag "${IMAGE_NAME}:${IMAGE_TAG}" "${ACR_LOGIN_SERVER}/${IMAGE_NAME}:${IMAGE_TAG}"
+                docker push "${ACR_LOGIN_SERVER}/${IMAGE_NAME}:${IMAGE_TAG}"
                 docker logout "$ACR_LOGIN_SERVER"
             '''
         }
 
         echo 'Docker image pushed to ACR successfully'
-    }
-}
     }
 }
