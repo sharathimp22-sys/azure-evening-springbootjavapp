@@ -10,7 +10,7 @@ pipeline {
 
     environment {
         TENANT_ID="e866530d-f137-4a9a-ad0a-2dd1fcb34b15"
-        IMAGE_NAME = "sprinbootapp"
+        IMAGE_NAME = "springbootapp"
         IMAGE_TAG = "latest"
         ACR_LOGIN_SERVER = "project4springboot.azurecr.io"
         
