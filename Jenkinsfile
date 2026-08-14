@@ -58,22 +58,17 @@ pipeline {
             }
         }
 
-        stage('Sonar Analysis')
-        {
-            environment {
-                SCANNER_HOME = tool 'Sonar-scanner'
-            }
-          steps {
-              withSonarQubeEnv('sonarserver') {
-                sh '''${SCANNER_HOME}/bin/sonar-scanner \
-                -Dsonar.organization=bkrrajmali \
-                -Dsonar.projectName=springbootapp \
-                -Dsonar.projectKey=springbootapp \
-                -Dsonar.java.binaries=.
-                '''
-              }
-            }
+        stage('Sonar Analysis') {
+    steps {
+        echo 'SonarQube Analysis Started'
+
+        withSonarQubeEnv('SonarQube') {
+            sh 'mvn sonar:sonar -Dsonar.projectKey=azure-evening-springbootjavapp'
         }
+
+        echo 'SonarQube Analysis Finished'
+    }
+}
         stage('Maven Package') 
         {
             steps {
