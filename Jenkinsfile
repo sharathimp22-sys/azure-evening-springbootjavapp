@@ -58,7 +58,7 @@ pipeline {
             }
         }
 
-        // stage('Sonar Analysis') {
+        stage('Sonar Analysis') {
     steps {
         echo 'SonarQube Analysis Started'
 
@@ -68,7 +68,7 @@ pipeline {
 
         echo 'SonarQube Analysis Finished'
     }
-}//
+}
         stage('Maven Package') 
         {
             steps {
