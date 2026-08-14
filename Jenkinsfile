@@ -96,3 +96,18 @@ pipeline {
       }
    }
 }
+stage('Trivy Image Scan') {
+    steps {
+        echo 'Scanning Docker image'
+
+        sh '''
+            trivy image \
+            --severity HIGH,CRITICAL \
+            --format table \
+            --output trivy-image-report.txt \
+            "${IMAGE_NAME}:${IMAGE_TAG}"
+        '''
+
+        archiveArtifacts artifacts: 'trivy-image-report.txt', fingerprint: true
+    }
+}
