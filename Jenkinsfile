@@ -63,7 +63,7 @@ pipeline {
         echo 'SonarQube Analysis Started'
 
         withSonarQubeEnv('SonarQube') {
-            sh 'mvn sonar:sonar -Dsonar.projectKey=azure-evening-springbootjavapp'
+            sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=azure-evening-springbootjavapp'
         }
 
         echo 'SonarQube Analysis Finished'
